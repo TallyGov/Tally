@@ -1,0 +1,30 @@
+import { loadConfig } from "./lib/config.js";
+import { setLogLevel } from "./lib/logger.js";
+import { runAgentLoop } from "./agent/loop.js";
+import { logger } from "./lib/logger.js";
+
+async function main(): Promise<void> {
+  const config = loadConfig();
+  setLogLevel(config.LOG_LEVEL);
+
+  logger.info("Tally Governance Monitor starting...");
+  logger.info(`Poll interval: ${config.POLL_INTERVAL_MS}ms | Min importance: ${config.MIN_IMPORTANCE_SCORE}/10`);
+
+  async function poll(): Promise<void> {
+    try {
+      await runAgentLoop(config);
+    } catch (err) {
+      logger.error("Poll error:", err);
+    }
+  }
+
+  await poll();
+
+  setInterval(poll, config.POLL_INTERVAL_MS);
+  logger.info(`Polling every ${config.POLL_INTERVAL_MS / 60_000}min...`);
+}
+
+main().catch((err) => {
+  console.error("Fatal error:", err);
+  process.exit(1);
+});
