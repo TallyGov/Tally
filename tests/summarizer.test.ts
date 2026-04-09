@@ -23,8 +23,8 @@ const makeProposal = (overrides: Partial<GovernanceProposal> = {}): GovernancePr
   ...overrides,
 });
 
-describe("computeImportanceScore", () => {
-  it("returns a score between 0 and 10", () => {
+describe("importance scoring", () => {
+  it("keeps the score between 0 and 10", () => {
     const proposal = makeProposal();
     const score = computeImportanceScore(proposal);
     expect(score).toBeGreaterThanOrEqual(0);
@@ -58,8 +58,8 @@ describe("computeImportanceScore", () => {
   });
 });
 
-describe("classifySentiment", () => {
-  it("returns bullish for proposals with strong for-vote and bullish keywords", () => {
+describe("sentiment classification", () => {
+  it("marks proposals bullish when for-votes and language both lean positive", () => {
     const proposal = makeProposal({
       title: "Expand incentive program and increase rewards",
       votesFor: 900_000,
@@ -85,8 +85,8 @@ describe("classifySentiment", () => {
   });
 });
 
-describe("extractKeyPoints", () => {
-  it("returns an array of strings", () => {
+describe("key point extraction", () => {
+  it("returns an array of digest bullets", () => {
     const proposal = makeProposal();
     const points = extractKeyPoints(proposal);
     expect(Array.isArray(points)).toBe(true);
