@@ -1,7 +1,7 @@
 {
   "name": "tally",
   "version": "1.0.0",
-  "description": "Governance proposal aggregator and summarizer for Solana DeFi.",
+  "description": "Governance digest board for Solana and DeFi proposals.",
   "license": "MIT",
   "repository": {
     "type": "git",

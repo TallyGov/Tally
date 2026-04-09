@@ -15,7 +15,7 @@ Tally watches Snapshot and Realms, builds readable governance digests from propo
 
 Governance is one of the few places where a token can change dramatically while the market is barely paying attention. Treasury policy, tokenomics shifts, voting power changes, and emergency proposals often move faster than most holders realize.
 
-Tally is built to close that gap. It tracks active proposals, scores them by importance, and turns governance-speak into a digest a normal operator can read in one pass.
+Tally is built to close that gap. It tracks active proposals, scores them by importance, and turns governance-speak into a digest a normal operator can scan in one pass.
 
 `FETCH -> SCORE -> SUMMARIZE -> CLASSIFY -> DIGEST`
 
