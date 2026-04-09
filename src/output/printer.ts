@@ -26,11 +26,13 @@ export function printSummary(summary: ProposalSummary): void {
   console.log(thin);
   console.log(`  SENTIMENT   [${sentimentIcon(summary.sentiment)}] ${sentimentLabel(summary.sentiment)}`);
   console.log(`  IMPORTANCE  [${importanceBar(summary.importanceScore)}] ${summary.importanceScore}/10`);
+  console.log(`  STATE       ${summary.state.toUpperCase()}`);
+  console.log(`  ACTION      ${summary.recommendation.toUpperCase()}`);
   console.log(thin);
-  console.log(`  SUMMARY`);
+  console.log("  SUMMARY");
   console.log(`  ${summary.claudeSummary}`);
   console.log(thin);
-  console.log(`  KEY POINTS`);
+  console.log("  KEY POINTS");
   for (const point of summary.keyPoints) {
     console.log(`    • ${point}`);
   }
@@ -39,9 +41,9 @@ export function printSummary(summary: ProposalSummary): void {
 
 export function printDigest(summaries: ProposalSummary[]): void {
   const ts = new Date().toLocaleString("en-US", { timeZone: "UTC" });
-  console.log(`\n  GOVERNANCE DIGEST  —  ${ts} UTC`);
-  console.log(`  ${summaries.length} active proposals across ${new Set(summaries.map((s) => s.protocol)).size} protocols\n`);
-  for (const s of summaries) {
-    printSummary(s);
+  console.log(`\n  GOVERNANCE DIGEST  -  ${ts} UTC`);
+  console.log(`  ${summaries.length} active proposals across ${new Set(summaries.map((summary) => summary.protocol)).size} protocols\n`);
+  for (const summary of summaries) {
+    printSummary(summary);
   }
 }

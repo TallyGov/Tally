@@ -2,6 +2,15 @@
   "name": "tally",
   "version": "1.0.0",
   "description": "Governance proposal aggregator and summarizer for Solana DeFi.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TallyGov/Tally.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TallyGov/Tally/issues"
+  },
+  "homepage": "https://github.com/TallyGov/Tally#readme",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

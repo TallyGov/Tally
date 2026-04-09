@@ -3,7 +3,7 @@
 # Tally
 
 **Governance signal board for Solana and DeFi proposals.**
-Tally watches Snapshot and Realms, rewrites governance language into plain English, and ranks proposals by how much they actually matter to token holders.
+Tally watches Snapshot and Realms, builds readable governance digests from proposal text and metadata, and ranks proposals by how much they actually matter to token holders.
 
 [![Build](https://img.shields.io/github/actions/workflow/status/TallyGov/Tally/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/TallyGov/Tally/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
@@ -15,7 +15,7 @@ Tally watches Snapshot and Realms, rewrites governance language into plain Engli
 
 Governance is one of the few places where a token can change dramatically while the market is barely paying attention. Treasury policy, tokenomics shifts, voting power changes, and emergency proposals often move faster than most holders realize.
 
-Tally is built to close that gap. It tracks active proposals, scores them by importance, and turns governance-speak into something a normal operator can read in one pass.
+Tally is built to close that gap. It tracks active proposals, scores them by importance, and turns governance-speak into a digest a normal operator can read in one pass.
 
 `FETCH -> SCORE -> SUMMARIZE -> CLASSIFY -> DIGEST`
 
@@ -83,9 +83,9 @@ Find which venues and proposals are active right now.
 
 Use the score to decide whether the proposal is routine, meaningful, or urgent.
 
-### 3. Read The Summary
+### 3. Read The Digest
 
-This is where the product earns its keep. The summary should explain the proposal like a human translated it for another human.
+This is where the product earns its keep. The digest should explain the proposal in plain language and make the urgency obvious without forcing the reader through raw governance text.
 
 ### 4. Decide What To Do
 
@@ -98,19 +98,19 @@ Tally follows a narrow governance loop:
 1. fetch active proposals from Snapshot and Realms
 2. normalize them into one comparable proposal surface
 3. score each proposal for importance and urgency
-4. summarize what the proposal actually does in plain language
-5. publish a digest that lets operators sort signal from governance clutter
+4. build a readable digest from proposal text, timing, and vote structure
+5. publish a board that lets operators sort signal from governance clutter
 
 The value is not merely "all the proposals in one place." The value is knowing which ones matter before they become post-mortem discussion.
 
 ## What A Good Tally Summary Sounds Like
 
-A good summary should not repeat the title with slightly cleaner words. It should explain:
+A good digest should not repeat the title with slightly cleaner words. It should explain:
 
 - what changes if this passes
 - who gains or loses influence
 - whether the proposal changes token-holder reality in a meaningful way
-- whether the operator should support, oppose, or simply keep watching
+- whether the operator should review now, keep it in watch mode, or safely leave it as low priority
 
 That tone matters a lot for launch because most buyers are not governance specialists. They just need the proposal to become understandable fast.
 
@@ -151,7 +151,7 @@ That is a much stronger launch story than a simple aggregator.
 ## Risk Controls
 
 - `importance scoring`: prevents routine proposals from burying urgent ones
-- `plain-language summaries`: reduces the risk of unreadable governance jargon
+- `digest summaries`: reduces the risk of unreadable governance jargon while preserving links to the source proposal
 - `venue normalization`: makes cross-platform governance easier to compare
 - `digest framing`: keeps the product focused on proposals that should alter attention and behavior
 

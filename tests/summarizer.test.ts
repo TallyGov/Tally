@@ -44,6 +44,18 @@ describe("computeImportanceScore", () => {
 
     expect(computeImportanceScore(highVotes)).toBeGreaterThan(computeImportanceScore(lowVotes));
   });
+
+  it("can emit low-priority scores below five", () => {
+    const lowSignal = makeProposal({
+      title: "Update meeting notes",
+      summary: "Administrative record keeping only.",
+      totalVotes: 10,
+      quorumPct: 1,
+      endsAt: Date.now() + 72 * 3_600_000,
+    });
+
+    expect(computeImportanceScore(lowSignal)).toBeLessThan(5);
+  });
 });
 
 describe("classifySentiment", () => {

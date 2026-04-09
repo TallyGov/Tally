@@ -31,6 +31,50 @@ const STATE_MAP: Record<number, GovernanceProposal["status"]> = {
   6: "cancelled",
 };
 
+async function fetchDescriptionText(url: string): Promise<string | null> {
+  if (!url) return null;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const text = html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return text.length > 0 ? text.slice(0, 1000) : null;
+  } catch {
+    return null;
+  }
+}
+
+function deriveRealmsEndTime(proposal: RealmsProposal): {
+  endsAt: number;
+  source: GovernanceProposal["endsAtSource"];
+} {
+  if (proposal.account.votingCompletedAt) {
+    return {
+      endsAt: new Date(proposal.account.votingCompletedAt).getTime(),
+      source: "realms_completed",
+    };
+  }
+
+  if (proposal.account.votingAt) {
+    return {
+      endsAt: new Date(proposal.account.votingAt).getTime() + 72 * 3_600_000,
+      source: "realms_estimated",
+    };
+  }
+
+  return {
+    endsAt: Date.now(),
+    source: "realms_estimated",
+  };
+}
+
 export async function fetchRealmsProposals(
   apiUrl: string
 ): Promise<GovernanceProposal[]> {
@@ -45,26 +89,32 @@ export async function fetchRealmsProposals(
 
       const raw = (await res.json()) as RealmsProposal[];
 
-      for (const p of raw) {
-        const votesFor = parseInt(p.account.options[0]?.voteWeight ?? "0", 10);
-        const votesAgainst = parseInt(p.account.denyVoteWeight ?? "0", 10);
-        const votesAbstain = parseInt(p.account.abstainVoteWeight ?? "0", 10);
-        const maxVotes = parseInt(p.account.maxVoteWeight ?? "0", 10);
+      for (const proposal of raw) {
+        const descriptionText = await fetchDescriptionText(proposal.account.descriptionLink);
+        const votesFor = parseInt(proposal.account.options[0]?.voteWeight ?? "0", 10);
+        const votesAgainst = parseInt(proposal.account.denyVoteWeight ?? "0", 10);
+        const votesAbstain = parseInt(proposal.account.abstainVoteWeight ?? "0", 10);
+        const maxVotes = parseInt(proposal.account.maxVoteWeight ?? "0", 10);
+        const timing = deriveRealmsEndTime(proposal);
 
         all.push({
-          id: p.pubkey,
+          id: proposal.pubkey,
           protocol: realm.name,
           realm: realm.id,
-          title: p.account.name,
-          summary: `Governance proposal on ${realm.name}. Description: ${p.account.descriptionLink}`,
-          status: STATE_MAP[1] ?? "active",
+          title: proposal.account.name,
+          summary: descriptionText
+            ? descriptionText
+            : `Proposal description is hosted externally at ${proposal.account.descriptionLink}. Review the linked document for full details.`,
+          summarySource: descriptionText ? "realms_description" : "realms_link",
+          status: STATE_MAP[proposal.account.state] ?? "active",
           votesFor,
           votesAgainst,
           votesAbstain,
           totalVotes: votesFor + votesAgainst + votesAbstain,
           quorumPct: maxVotes > 0 ? ((votesFor + votesAgainst) / maxVotes) * 100 : 0,
-          endsAt: Date.now() + 86_400_000,
-          link: `https://app.realms.today/dao/${realm.id}/proposal/${p.pubkey}`,
+          endsAt: timing.endsAt,
+          endsAtSource: timing.source,
+          link: `https://app.realms.today/dao/${realm.id}/proposal/${proposal.pubkey}`,
           fetchedAt: Date.now(),
         });
       }

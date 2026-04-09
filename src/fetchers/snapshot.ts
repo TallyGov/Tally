@@ -62,6 +62,7 @@ export async function fetchSnapshotProposals(
         protocol: p.space.name,
         title: p.title,
         summary: p.body.slice(0, 500),
+        summarySource: "snapshot_body",
         status: p.state === "active" ? "active" : "passed",
         votesFor: forScore,
         votesAgainst: againstScore,
@@ -69,6 +70,7 @@ export async function fetchSnapshotProposals(
         totalVotes: p.scores_total,
         quorumPct: p.quorum > 0 ? (p.scores_total / p.quorum) * 100 : 0,
         endsAt: p.end * 1000,
+        endsAtSource: "snapshot_end",
         link: p.link,
         fetchedAt: Date.now(),
       };
