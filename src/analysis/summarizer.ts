@@ -1,5 +1,6 @@
 import type { GovernanceProposal, ProposalSummary } from "../lib/types.js";
 
+// Importance is deliberately simple and deterministic so the digest can be audited.
 export function computeImportanceScore(proposal: GovernanceProposal): number {
   let score = 2;
 
