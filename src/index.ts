@@ -11,16 +11,33 @@ async function main(): Promise<void> {
   logger.info(`Poll interval: ${config.POLL_INTERVAL_MS}ms | Min importance: ${config.MIN_IMPORTANCE_SCORE}/10`);
 
   async function poll(): Promise<void> {
+    const startedAt = Date.now();
+
     try {
       await runAgentLoop(config);
     } catch (err) {
       logger.error("Poll error:", err);
+    } finally {
+      const durationMs = Date.now() - startedAt;
+      logger.info("Governance poll complete", { durationMs });
+
+      if (durationMs > config.POLL_INTERVAL_MS) {
+        logger.warn("Governance poll exceeded configured interval", {
+          durationMs,
+          intervalMs: config.POLL_INTERVAL_MS,
+        });
+      }
     }
   }
 
-  await poll();
+  const runLoop = async (): Promise<void> => {
+    await poll();
+    setTimeout(() => {
+      void runLoop();
+    }, config.POLL_INTERVAL_MS);
+  };
 
-  setInterval(poll, config.POLL_INTERVAL_MS);
+  await runLoop();
   logger.info(`Polling every ${config.POLL_INTERVAL_MS / 60_000}min...`);
 }
 
