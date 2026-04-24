@@ -72,7 +72,7 @@ export function classifySentiment(
   const bearishHits = bearishKeywords.filter((keyword) => text.includes(keyword)).length;
 
   if (bearishHits > bullishHits) return "bearish";
-  if (bullishHits > bearishHits || forPct > 70) return "bullish";
+  if (forPct > 70 || (bullishHits > bearishHits && forPct > 55)) return "bullish";
   return "neutral";
 }
 
