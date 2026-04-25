@@ -21,15 +21,7 @@ Tally is built to close that gap. It tracks active proposals, scores them by imp
 
 ---
 
-Live Vote Dashboard • Proposal Detail • Why Tally Exists • At a Glance • Governance States • What Makes A Proposal Important • Reader Workflow • Example Output • Importance Model • Risk Controls • Quick Start
-
-## Live Vote Dashboard
-
-![Tally Votes](assets/preview-votes.svg)
-
-## Proposal Detail
-
-![Tally Proposal](assets/preview-proposal.svg)
+Why Tally Exists • At a Glance • Governance States • What Makes A Proposal Important • Reader Workflow • Example Output • Importance Model • Risk Controls • Quick Start
 
 ## Why Tally Exists
 
